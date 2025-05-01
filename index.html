@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VS Code Snippet Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: #0288d1;
+      padding: 1rem;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    main {
+      flex-grow: 1;
+      padding: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .grid-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .card {
+      background-color: #2d2d2d;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+    h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+      color: #b0bec5;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      color: #b0bec5;
+      margin-bottom: 0.25rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #424242;
+      border-radius: 4px;
+      background-color: #3c3c3c;
+      color: #e0e0e0;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #26a69a;
+      box-shadow: 0 0 0 2px rgba(38, 166, 154, 0.3);
+    }
+    textarea {
+      font-family: 'Courier New', Courier, monospace;
+      resize: vertical;
+      min-height: 120px;
+    }
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+    }
+    button:hover {
+      transform: scale(1.02);
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    .btn-primary {
+      background-color: #26a69a;
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background-color: #2cb7aa;
+    }
+    .btn-secondary {
+      background-color: #616161;
+      color: #ffffff;
+    }
+    .btn-secondary:hover {
+      background-color: #757575;
+    }
+    .btn-danger {
+      background-color: #ef5350;
+      color: #ffffff;
+    }
+    .btn-danger:hover {
+      background-color: #f44336;
+    }
+    .status {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      transition: opacity 0.3s ease;
+    }
+    .status.hidden {
+      opacity: 0;
+      height: 0;
+      overflow: hidden;
+    }
+    .status.success {
+      color: #26a69a;
+    }
+    .status.error {
+      color: #ef5350;
+    }
+    #snippetList {
+      margin-bottom: 1rem;
+    }
+    #snippetList ul {
+      list-style: disc;
+      padding-left: 1.5rem;
+      color: #b0bec5;
+    }
+    #snippetList p {
+      color: #757575;
+    }
+    #jsonPreview {
+      background-color: #263238;
+      color: #e0e0e0;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 1rem;
+      border-radius: 4px;
+      height: 16rem;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-size: 0.9rem;
+    }
+    footer {
+      background-color: #212121;
+      padding: 1rem;
+      text-align: center;
+      color: #b0bec5;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>VS Code Snippet Generator</h1>
+  </header>
+  <main>
+    <div class="grid-container">
+      <!-- Input Form -->
+      <div class="card">
+        <h2>Create Snippet</h2>
+        <div>
+          <div>
+            <label for="snippetName">Snippet Name</label>
+            <input type="text" id="snippetName" placeholder="e.g., Console Log">
+          </div>
+          <div>
+            <label for="snippetPrefix">Prefix</label>
+            <input type="text" id="snippetPrefix" placeholder="e.g., clog">
+          </div>
+          <div>
+            <label for="snippetDescription">Description</label>
+            <input type="text" id="snippetDescription" placeholder="e.g., Inserts a console.log statement">
+          </div>
+          <div>
+            <label for="snippetBody">Body (one line per enter)</label>
+            <textarea id="snippetBody" placeholder="e.g., console.log($1);"></textarea>
+          </div>
+          <div class="button-group">
+            <button id="addSnippet" class="btn-primary">Add Snippet</button>
+            <button id="clearForm" class="btn-secondary">Clear Form</button>
+          </div>
+        </div>
+        <p id="status" class="status hidden"></p>
+      </div>
+      <!-- Preview and Controls -->
+      <div class="card">
+        <h2>Generated Snippets</h2>
+        <div id="snippetList">
+          <p>No snippets added yet.</p>
+        </div>
+        <h3>JSON Preview</h3>
+        <pre id="jsonPreview">{} </pre>
+        <div class="button-group">
+          <button id="copySnippet" class="btn-primary">Copy Snippet</button>
+          <button id="downloadSnippet" class="btn-primary">Download Snippets</button>
+          <button id="clearAll" class="btn-danger">Clear All</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>© 2025 VS Code Snippet Generator</p>
+  </footer>
+  <script>
+    const snippets = {};
+
+    // Helper to show status messages
+    function showStatus(message, isError = false) {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.classList.remove('hidden', 'success', 'error');
+      status.classList.add(isError ? 'error' : 'success');
+      setTimeout(() => status.classList.add('hidden'), 3000);
+    }
+
+    // Update JSON preview
+    function updatePreview() {
+      const jsonPreview = document.getElementById('jsonPreview');
+      jsonPreview.textContent = JSON.stringify(snippets, null, 2);
+    }
+
+    // Update snippet list display
+    function updateSnippetList() {
+      const snippetList = document.getElementById('snippetList');
+      snippetList.innerHTML = '';
+      if (Object.keys(snippets).length === 0) {
+        snippetList.innerHTML = '<p>No snippets added yet.</p>';
+        return;
+      }
+      const ul = document.createElement('ul');
+      for (const name in snippets) {
+        const li = document.createElement('li');
+        li.textContent = `${name} (Prefix: ${snippets[name].prefix})`;
+        ul.appendChild(li);
+      }
+      snippetList.appendChild(ul);
+    }
+
+    // Add snippet
+    document.getElementById('addSnippet').addEventListener('click', () => {
+      const name = document.getElementById('snippetName').value.trim();
+      const prefix = document.getElementById('snippetPrefix').value.trim();
+      const description = document.getElementById('snippetDescription').value.trim();
+      const body = document.getElementById('snippetBody').value.split('\n').map(line => line.replace(/\t/g, '\\t'));
+
+      if (!name || !prefix || !body[0]) {
+        showStatus('Please fill in Name, Prefix, and Body.', true);
+        return;
+      }
+
+      snippets[name] = { prefix, body, description };
+      updatePreview();
+      updateSnippetList();
+      showStatus('Snippet added successfully!');
+
+      // Clear form
+      document.getElementById('snippetName').value = '';
+      document.getElementById('snippetPrefix').value = '';
+      document.getElementById('snippetDescription').value = '';
+      document.getElementById('snippetBody').value = '';
+    });
+
+    // Clear form
+    document.getElementById('clearForm').addEventListener('click', () => {
+      document.getElementById('snippetName').value = '';
+      document.getElementById('snippetPrefix').value = '';
+      document.getElementById('snippetDescription').value = '';
+      document.getElementById('snippetBody').value = '';
+      showStatus('Form cleared.');
+    });
+
+    // Clear all snippets
+    document.getElementById('clearAll').addEventListener('click', () => {
+      for (const key in snippets) delete snippets[key];
+      updatePreview();
+      updateSnippetList();
+      showStatus('All snippets cleared.');
+    });
+
+    // Download snippets
+    document.getElementById('downloadSnippet').addEventListener('click', () => {
+      if (Object.keys(snippets).length === 0) {
+        showStatus('No snippets to download.', true);
+        return;
+      }
+      const blob = new Blob([JSON.stringify(snippets, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'my-snippets.code-snippets';
+      a.click();
+      URL.revokeObjectURL(url);
+      showStatus('Snippets downloaded!');
+    });
+
+    // Copy snippet to clipboard
+    document.getElementById('copySnippet').addEventListener('click', () => {
+      if (Object.keys(snippets).length === 0) {
+        showStatus('No snippets to copy.', true);
+        return;
+      }
+      const text = JSON.stringify(snippets, null, 2);
+      navigator.clipboard.writeText(text).then(() => {
+        showStatus('Snippets copied to clipboard!');
+      }).catch(err => {
+        showStatus('Failed to copy snippets.', true);
+        console.error('Clipboard error:', err);
+      });
+    });
+  </script>
+</body>
+</html>
