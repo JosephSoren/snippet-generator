@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VS Code Snippet Generator - Create Your Own Code Snippets</title>
+<meta name="msvalidate.01" content="FAB3C1489BB1E1C8B2D101D954D16563" />
+<meta name="title" content="VS Code Snippet Generator - Create Your Own Code Snippets">
+<meta name="description" content="Easily create and export Visual Studio Code snippets online. Customize, preview, and download your VS Code snippet JSON with our free snippet generator tool.">
+<meta name="keywords" content="VS Code snippet generator, vscode snippet maker, code snippet tool, generate vscode snippets, JSON code snippets">
+<meta name="author" content="SnippetGenerator.online">
+<meta name="robots" content="index, follow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://snippetgenerator.online/">
+<meta property="og:title" content="VS Code Snippet Generator - Create Your Own Code Snippets">
+<meta property="og:description" content="Easily create, preview, and export custom VS Code snippets online with our powerful snippet generator.">
+<meta property="og:image" content="https://snippetgenerator.online/assets/snippet-preview.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://snippetgenerator.online/">
+<meta name="twitter:title" content="VS Code Snippet Generator - Create Your Own Code Snippets">
+<meta name="twitter:description" content="Easily generate VS Code snippets online with a user-friendly interface. Download or copy your snippet instantly.">
+<meta name="twitter:image" content="https://snippetgenerator.online/assets/snippet-preview.png">
+
+<!-- Canonical Tag (Avoid Duplicate Content Issues) -->
+<link rel="canonical" href="https://snippetgenerator.online">
+<link rel="apple-touch-icon" sizes="57x57" href="/favicons/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="/favicons/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="/favicons/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="/favicons/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="/favicons/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="/favicons/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="/favicons/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="/favicons/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="/favicons/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+<meta name="theme-color" content="#ffffff">
+
+  <script src="httpss://cdn.tailwindcss.com"></script>
+  
+   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    #snippetBody {
+      font-family: 'Courier New', Courier, monospace;
+      white-space: pre-wrap;
+    }
+    #jsonPreview {
+      background-color: #1e293b;
+      color: #e2e8f0;
+      font-family: 'Courier New', Courier, monospace;
+      white-space: pre-wrap;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <header class="bg-blue-600 text-white p-4">
+    <h1 class="text-2xl font-bold">VS Code Snippet Generator</h1>
+  </header>
+  <main class="flex-grow container mx-auto p-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <!-- Input Form -->
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Create Snippet</h2>
+        <div class="space-y-4">
+          <div>
+            <label for="snippetName" class="block text-sm font-medium text-gray-700">Snippet Name</label>
+            <input type="text" id="snippetName" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., Console Log">
+          </div>
+          <div>
+            <label for="snippetPrefix" class="block text-sm font-medium text-gray-700">Prefix</label>
+            <input type="text" id="snippetPrefix" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., clog">
+          </div>
+          <div>
+            <label for="snippetDescription" class="block text-sm font-medium text-gray-700">Description</label>
+            <input type="text" id="snippetDescription" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., Inserts a console.log statement">
+          </div>
+          <div>
+            <label for="snippetBody" class="block text-sm font-medium text-gray-700">Body (one line per enter)</label>
+            <textarea id="snippetBody" rows="6" class="mt-1 block w-full p-2 border border-gray-300 rounded-md" placeholder="e.g., console.log($1);"></textarea>
+          </div>
+          <div class="flex space-x-2">
+            <button id="addSnippet" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Add Snippet</button>
+            <button id="clearForm" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">Clear Form</button>
+          </div>
+        </div>
+        <p id="status" class="mt-4 text-sm text-green-600 hidden"></p>
+      </div>
+      <!-- Preview and Controls -->
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-semibold mb-4">Generated Snippets</h2>
+        <div id="snippetList" class="mb-4">
+          <p class="text-gray-500">No snippets added yet.</p>
+        </div>
+        <h3 class="text-lg font-medium mb-2">JSON Preview</h3>
+        <pre id="jsonPreview" class="p-4 rounded-md h-64 overflow-y-auto">{} </pre>
+        <div class="flex space-x-2 mt-4">
+          <button id="copySnippet" class="bg-teal-500 text-white px-4 py-2 rounded-md hover:bg-teal-600">Copy Snippet</button>
+          <button id="downloadSnippet" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">Download Snippets</button>
+          <button id="clearAll" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">Clear All</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="bg-gray-800 text-white p-4 text-center">
+    <p>© 2025 VS Code Snippet Generator</p>
+  </footer>
+  <script>
+    const snippets = {};
+
+    // Helper to show status messages
+    function showStatus(message, isError = false) {
+      const status = document.getElementById('status');
+      status.textContent = message;
+      status.classList.remove('hidden', 'text-green-600', 'text-red-600');
+      status.classList.add(isError ? 'text-red-600' : 'text-green-600');
+      setTimeout(() => status.classList.add('hidden'), 3000);
+    }
+
+    // Update JSON preview
+    function updatePreview() {
+      const jsonPreview = document.getElementById('jsonPreview');
+      jsonPreview.textContent = JSON.stringify(snippets, null, 2);
+    }
+
+    // Update snippet list display
+    function updateSnippetList() {
+      const snippetList = document.getElementById('snippetList');
+      snippetList.innerHTML = '';
+      if (Object.keys(snippets).length === 0) {
+        snippetList.innerHTML = '<p class="text-gray-500">No snippets added yet.</p>';
+        return;
+      }
+      const ul = document.createElement('ul');
+      ul.className = 'list-disc pl-5';
+      for (const name in snippets) {
+        const li = document.createElement('li');
+        li.textContent = `${name} (Prefix: ${snippets[name].prefix})`;
+        ul.appendChild(li);
+      }
+      snippetList.appendChild(ul);
+    }
+
+    // Add snippet
+    document.getElementById('addSnippet').addEventListener('click', () => {
+      const name = document.getElementById('snippetName').value.trim();
+      const prefix = document.getElementById('snippetPrefix').value.trim();
+      const description = document.getElementById('snippetDescription').value.trim();
+      const body = document.getElementById('snippetBody').value.split('\n').map(line => line.replace(/\t/g, '\\t'));
+
+      if (!name || !prefix || !body[0]) {
+        showStatus('Please fill in Name, Prefix, and Body.', true);
+        return;
+      }
+
+      snippets[name] = { prefix, body, description };
+      updatePreview();
+      updateSnippetList();
+      showStatus('Snippet added successfully!');
+
+      // Clear form
+      document.getElementById('snippetName').value = '';
+      document.getElementById('snippetPrefix').value = '';
+      document.getElementById('snippetDescription').value = '';
+      document.getElementById('snippetBody').value = '';
+    });
+
+    // Clear form
+    document.getElementById('clearForm').addEventListener('click', () => {
+      document.getElementById('snippetName').value = '';
+      document.getElementById('snippetPrefix').value = '';
+      document.getElementById('snippetDescription').value = '';
+      document.getElementById('snippetBody').value = '';
+      showStatus('Form cleared.');
+    });
+
+    // Clear all snippets
+    document.getElementById('clearAll').addEventListener('click', () => {
+      for (const key in snippets) delete snippets[key];
+      updatePreview();
+      updateSnippetList();
+      showStatus('All snippets cleared.');
+    });
+
+    // Download snippets
+    document.getElementById('downloadSnippet').addEventListener('click', () => {
+      if (Object.keys(snippets).length === 0) {
+        showStatus('No snippets to download.', true);
+        return;
+      }
+      const blob = new Blob([JSON.stringify(snippets, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'my-snippets.code-snippets';
+      a.click();
+      URL.revokeObjectURL(url);
+      showStatus('Snippets downloaded!');
+    });
+
+    // Copy snippet to clipboard
+    document.getElementById('copySnippet').addEventListener('click', () => {
+      if (Object.keys(snippets).length === 0) {
+        showStatus('No snippets to copy.', true);
+        return;
+      }
+      const text = JSON.stringify(snippets, null, 2);
+      navigator.clipboard.writeText(text).then(() => {
+        showStatus('Snippets copied to clipboard!');
+      }).catch(err => {
+        showStatus('Failed to copy snippets.', true);
+        console.error('Clipboard error:', err);
+      });
+    });
+  </script>
+</body>
+</html>
